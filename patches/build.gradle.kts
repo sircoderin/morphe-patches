@@ -1,14 +1,13 @@
-group = "app.template"
+group = "app.sircoderin"
 
 patches {
-    // TODO: Update this section with your project details.
-    about {
-        name = "UserXYZ Patches"
-        description = "Patches for apps I like"
-        source = "git@github.com:UserXYZ/morphe-patches.git"
-        author = "Awesome dev"
-        contact = "na"
-        website = "na"
+        about {
+        name = "sircoderin Patches"
+        description = "Small UX fixes for apps I use"
+        source = "git@github.com:sircoderin/morphe-patches.git"
+        author = "sircoderin"
+        contact = "https://github.com/sircoderin/morphe-patches/issues"
+        website = "https://github.com/sircoderin/morphe-patches"
         license = "GPLv3"
     }
 }
