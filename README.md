@@ -1,12 +1,19 @@
-# 👋🧩 Morphe Patches template
+# 🧩 sircoderin Patches
 
-Template repository for Morphe Patches.
+Small UX fixes for apps I use, packaged as a Morphe patch bundle.
 
 ## ❓ About
 
-Patches for apps I like.
+### Kvaesitso
 
-<!-- TODO: Update this about section with a brief introduction/summary about this repo and what it offers. -->
+[Kvaesitso](https://github.com/MM2-0/Kvaesitso) can be opened as a search-only overlay (its "assistant" mode) on top of another launcher. These patches make that overlay feel smoother:
+
+- **Instant search dismiss**: swipe-to-close finishes as soon as the swipe is released, instead of waiting for the swipe animation to fully settle. This removes the ~350 ms of frozen blur before the home screen comes back.
+- **Search fade-in**: the overlay fades and gently scales in when it opens, mirroring the close animation, instead of popping in.
+
+Tested on Kvaesitso 1.41.0 (official GitHub release). Later versions are marked experimental in Morphe Manager.
+
+Unofficial and not affiliated with the patched apps or the Morphe project.
 
 ### How to use these patches
 
@@ -100,4 +107,4 @@ See the [Morphe documentation](https://github.com/MorpheApp/morphe-documentation
 
 ## 📜 License
 
-UserXYZ Patches are licensed under the [GNU General Public License v3.0](LICENSE)
+sircoderin Patches are licensed under the [GNU General Public License v3.0](LICENSE)
