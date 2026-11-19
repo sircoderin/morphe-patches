@@ -1,6 +1,7 @@
 name: Support new app versions
 
-# Once a day, check APKMirror for new releases of the patched apps. When one
+# Once a day, check the patched apps' release sources (APKMirror feed or the
+# project's GitHub releases) for new versions. When one
 # appears, add it to the supported versions on main and start a release, so
 # Morphe Manager shows "App update available".
 
@@ -25,6 +26,8 @@ jobs:
 
       - name: Check feeds and update Constants.kt
         id: bump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 .github/scripts/bump_app_versions.py
 
       - name: Commit and push
