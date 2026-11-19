@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Add newly released app versions to the patches' supported versions.
 
-For each tracked app, read its APKMirror release feed. If the newest stable
+For each tracked app, read its release source (an APKMirror feed or the
+project's GitHub releases). If the newest stable
 version is newer than every version listed in that app's Compatibility block
 in Constants.kt, add it as a supported AppTarget. Morphe Manager then shows
 "App update available" for the patched app once the next release is published.
@@ -12,6 +13,7 @@ Exits non-zero if a feed can't be read, so a broken check fails loudly.
 import os
 import re
 import sys
+import json
 import urllib.request
 
 CONSTANTS = os.environ.get(
@@ -22,8 +24,16 @@ APPS = [
         "name": "Twilight",
         "scope": "twilight",
         "constant": "COMPATIBILITY_TWILIGHT",
+        "source": "apkmirror",
         "feed": "https://www.apkmirror.com/apk/urbandroid-team/twilight/feed/",
         "title_prefix": "Twilight: Blue light filter ",
+    },
+    {
+        "name": "Kvaesitso",
+        "scope": "kvaesitso",
+        "constant": "COMPATIBILITY_KVAESITSO",
+        "source": "github",
+        "repo": "MM2-0/Kvaesitso",
     },
 ]
 
@@ -32,6 +42,32 @@ VERSION_RE = re.compile(r"^\d+(?:\.\d+)+$")
 
 def vkey(v):
     return tuple(int(p) for p in v.split("."))
+
+
+def latest_github_version(app):
+    headers = {"Accept": "application/vnd.github+json", "User-Agent": "bump-app-versions"}
+    token = os.environ.get("GITHUB_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    url = f"https://api.github.com/repos/{app['repo']}/releases?per_page=20"
+    with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=30) as r:
+        releases = json.load(r)
+    versions = []
+    for rel in releases:
+        if rel.get("draft") or rel.get("prerelease"):
+            continue
+        v = rel["tag_name"].lstrip("v")
+        if VERSION_RE.match(v):
+            versions.append(v)
+    if not versions:
+        raise RuntimeError(f"{app['name']}: no stable releases found in {app['repo']}")
+    return max(versions, key=vkey)
+
+
+def latest_version(app):
+    if app["source"] == "github":
+        return latest_github_version(app)
+    return latest_feed_version(app)
 
 
 def latest_feed_version(app):
@@ -59,7 +95,7 @@ def main():
         end = src.index("\n    )", start)
         block = src[start:end]
         listed = re.findall(r'AppTarget\(version = "([^"]+)"', block)
-        latest = latest_feed_version(app)
+        latest = latest_version(app)
         newest_listed = max(listed, key=vkey) if listed else None
         print(f"{app['name']}: feed {latest}, newest supported {newest_listed}")
         if newest_listed and vkey(latest) <= vkey(newest_listed):
