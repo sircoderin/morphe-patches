@@ -48,7 +48,7 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.0](https://github.com/sircoderin/morphe-patches/releases/tag/v1.3.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
+> **[v1.3.1-dev.1](https://github.com/sircoderin/morphe-patches/releases/tag/v1.3.1-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
 <details open>
 <summary>📦 Kvaesitso&nbsp;&nbsp;•&nbsp;&nbsp;3 patches</summary>
 <br>
@@ -82,7 +82,7 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Home pull to refresh](#home-pull-to-refresh) | Enables Spotify's built-in pull-to-refresh on the Home feed, which is normally turned off by a server flag. |  |
-| [Restore Home scroll position](#restore-home-scroll-position) | Fixes the Home feed staying blank when you go back to it after scrolling down and opening an album, and restores the vertical and carousel scroll positions. On Back, Home is shown from cache instead of being reloaded a few seconds later; use "Home pull to refresh" to refresh it. |  |
+| [Restore Home scroll position](#restore-home-scroll-position) | Fixes the Home feed staying blank when you go back to it after scrolling down and opening an album, and restores the vertical and carousel scroll positions. On Back, Home is shown from cache instead of being reloaded a few seconds later; use "Home pull to refresh" to refresh it. Also keeps the row you are looking at in place when Spotify swaps in fresh Home content while you scroll. |  |
 
 </details>
 
