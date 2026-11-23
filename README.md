@@ -10,6 +10,7 @@ Small UX fixes for apps I use, packaged as a Morphe patch bundle.
 
 - **Instant search dismiss**: swipe-to-close finishes as soon as the swipe is released, instead of waiting for the swipe animation to fully settle. This removes the ~350 ms of frozen blur before the home screen comes back.
 - **Search fade-in**: the overlay fades and gently scales in when it opens, mirroring the close animation, instead of popping in.
+- **Clean search on reopen**: swiping down for the search again (for example after launching an app from it and going Home) always starts a clean search with the keyboard open. Going back to the search with Back from an app you launched from it keeps what you typed. Before, what you got depended only on time: under 5 s the old query stayed, over 5 s it flashed and was cleared, and either way the keyboard stayed closed.
 
 Tested on Kvaesitso 1.41.0 (official GitHub release).
 
@@ -47,7 +48,26 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.2](https://github.com/sircoderin/morphe-patches/releases/tag/v1.2.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;5 patches total
+> **[v1.3.0-dev.2](https://github.com/sircoderin/morphe-patches/releases/tag/v1.3.0-dev.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
+<details open>
+<summary>📦 Kvaesitso&nbsp;&nbsp;•&nbsp;&nbsp;3 patches</summary>
+<br>
+
+**Package name:** `de.mm20.launcher2.release`
+
+**🎯 Supported versions:**
+
+| 1.41.0 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Clean search on reopen](#clean-search-on-reopen) | Opening the search overlay again always starts a clean search with the keyboard open. Going back to it from an app you launched keeps what you typed. |  |
+| [Instant search dismiss](#instant-search-dismiss) | Closes the search overlay as soon as the swipe-to-close is released, instead of after the swipe animation fully settles (removes the frozen blur when closing). |  |
+| [Search fade-in](#search-fade-in) | Fades and gently scales the search overlay in when it opens, mirroring the close animation. |  |
+
+</details>
+
 <details open>
 <summary>📦 Spotify&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
@@ -63,24 +83,6 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 |----------|----------------|-----------|
 | [Home pull to refresh](#home-pull-to-refresh) | Enables Spotify's built-in pull-to-refresh on the Home feed, which is normally turned off by a server flag. |  |
 | [Restore Home scroll position](#restore-home-scroll-position) | Fixes the Home feed staying blank when you go back to it after scrolling down and opening an album, and restores the vertical and carousel scroll positions. On Back, Home is shown from cache instead of being reloaded a few seconds later; use "Home pull to refresh" to refresh it. |  |
-
-</details>
-
-<details open>
-<summary>📦 Kvaesitso&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
-<br>
-
-**Package name:** `de.mm20.launcher2.release`
-
-**🎯 Supported versions:**
-
-| 1.41.0 |
-| :---: |
-
-| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
-|----------|----------------|-----------|
-| [Instant search dismiss](#instant-search-dismiss) | Closes the search overlay as soon as the swipe-to-close is released, instead of after the swipe animation fully settles (removes the frozen blur when closing). |  |
-| [Search fade-in](#search-fade-in) | Fades and gently scales the search overlay in when it opens, mirroring the close animation. |  |
 
 </details>
 
