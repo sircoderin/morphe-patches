@@ -1,3 +1,9 @@
+## [1.3.0-dev.2](https://github.com/sircoderin/morphe-patches/compare/v1.3.0-dev.1...v1.3.0-dev.2) (2026-11-23)
+
+### ✨ New Features
+
+* **kvaesitso:** replace "Keep keyboard on reopen" with "Clean search on reopen" ([c1e72cc](https://github.com/sircoderin/morphe-patches/commit/c1e72cc055cd6eacf1238c877284ccc34b8192f5))
+
 ## [1.3.0-dev.1](https://github.com/sircoderin/morphe-patches/compare/v1.2.2...v1.3.0-dev.1) (2026-11-23)
 
 ### ✨ New Features
