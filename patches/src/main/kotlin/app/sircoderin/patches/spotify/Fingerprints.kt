@@ -2,6 +2,7 @@ package app.sircoderin.patches.spotify
 
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.methodCall
+import app.morphe.patcher.newInstance
 import app.morphe.patcher.string
 
 /**
@@ -77,5 +78,20 @@ internal object HomeStartLoopFingerprint : Fingerprint(
     filters = listOf(
         string("EvoLoadableResource :: startLoop"),
         methodCall(parameters = listOf("Z")),
+    ),
+)
+
+/**
+ * The Home image-link carousel's view constructor (obfuscated, `p.q680.<init>`). It creates a `LinkedHashMap` of
+ * carousel LayoutManager states keyed by section id, which its LayoutManager (the anonymous
+ * `ImageLinkCarouselElementUI$view$1$1`, whose name R8 keeps) saves into on detach and restores from on attach.
+ * Keys on that class name.
+ */
+internal object HomeCarouselConstructorFingerprint : Fingerprint(
+    name = "<init>",
+    returnType = "V",
+    filters = listOf(
+        newInstance("Ljava/util/LinkedHashMap;"),
+        newInstance("Lcom/spotify/home/evopage/element/imagelinks/ImageLinkCarouselElementUI\$view\$1\$1;"),
     ),
 )

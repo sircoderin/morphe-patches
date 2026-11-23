@@ -35,14 +35,17 @@ private const val LIST = "Ljava/util/List;"
  * - at the start of the page-update handler: tell the extension about every update (size of the ready-rows list);
  * - in the Home loop starter: on a restored start (`kjc0.t(true)`), always use the cache-only load strategy
  *   (RESTORE_OR_REVALIDATE), so the network revalidation does not replace the restored list a few seconds later;
- * - in `serialize()`: record each carousel's horizontal offset (Spotify saves none) and re-apply it after Back.
+ * - in `serialize()`: note the rows shown when Home is left, so the restore can find the same section again;
+ * - in the carousel constructor: Spotify keeps each carousel's scroll state in a map keyed by section id, but creates
+ *   that map per view, so it is lost when Home's view is rebuilt on Back. Use one process-wide map instead.
  */
 @Suppress("unused")
 val restoreHomeScrollPatch = patch(
     name = "Restore Home scroll position",
     description = "Fixes the Home feed staying blank when you go back to it after scrolling down and opening " +
         "an album, and restores the vertical and carousel scroll positions. On Back, Home is shown from cache " +
-        "instead of being reloaded a few seconds later; use \"Home pull to refresh\" to refresh it.",
+        "instead of being reloaded a few seconds later; use \"Home pull to refresh\" to refresh it. Also keeps " +
+        "the row you are looking at in place when Spotify swaps in fresh Home content while you scroll.",
     default = true,
 ) {
     compatibleWith(COMPATIBILITY_SPOTIFY)
@@ -53,6 +56,7 @@ val restoreHomeScrollPatch = patch(
         hookRestore()
         hookSerialize()
         hookLoadStrategy()
+        hookCarouselStates()
     }
 }
 
@@ -191,5 +195,27 @@ private fun hookLoadStrategy() {
             return-object v0
         """,
         ExternalLabel("original", strategyMethod.implementation!!.instructions.first()),
+    )
+}
+
+/** Replaces the carousel's per-view state map (`new LinkedHashMap()`) with the extension's process-wide map. */
+private fun hookCarouselStates() {
+    val method = HomeCarouselConstructorFingerprint.method
+    val instructions = method.implementation!!.instructions.toList()
+    val newIndex = HomeCarouselConstructorFingerprint.instructionMatches.first().index
+    val register = (instructions[newIndex] as OneRegisterInstruction).registerA
+    val initIndex = (newIndex + 1 until instructions.size).first { i ->
+        val ins = instructions[i]
+        val ref = (ins as? ReferenceInstruction)?.reference as? MethodReference
+        ins.opcode == Opcode.INVOKE_DIRECT && ref?.definingClass == "Ljava/util/LinkedHashMap;" &&
+            ref.name == "<init>" && ref.parameterTypes.isEmpty() &&
+            (ins as FiveRegisterInstruction).registerC == register
+    }
+    method.addInstructions(
+        initIndex + 1,
+        """
+            invoke-static { }, $EXT->carouselStates()Ljava/util/LinkedHashMap;
+            move-result-object v$register
+        """,
     )
 }
