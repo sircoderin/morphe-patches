@@ -47,7 +47,7 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.0](https://github.com/sircoderin/morphe-patches/releases/tag/v1.2.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;5 patches total
+> **[v1.2.1](https://github.com/sircoderin/morphe-patches/releases/tag/v1.2.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;5 patches total
 <details open>
 <summary>📦 Spotify&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
@@ -56,8 +56,8 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 
 **🎯 Supported versions:**
 
-| 9.2.0.2053 |
-| :---: |
+| 9.2.4.2644 | 9.2.0.2053 |
+| :---: | :---: |
 
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
