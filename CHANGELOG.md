@@ -1,3 +1,9 @@
+## [1.3.1-dev.1](https://github.com/sircoderin/morphe-patches/compare/v1.3.0...v1.3.1-dev.1) (2026-11-23)
+
+### 🐛 Bug Fixes
+
+* **spotify:** restore Home by section and keep carousel positions ([370afec](https://github.com/sircoderin/morphe-patches/commit/370afeca52309b71409d9c517b8f1b7695f0c21d))
+
 ## [1.3.0](https://github.com/sircoderin/morphe-patches/compare/v1.2.2...v1.3.0) (2026-11-23)
 
 ### ✨ New Features

@@ -3,6 +3,8 @@ package app.sircoderin.patches.spotify
 import app.morphe.patcher.Fingerprint
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructionsWithLabels
+import app.morphe.patcher.extensions.InstructionExtensions.removeInstructions
+import app.morphe.patcher.util.proxy.mutableTypes.MutableMethod
 import app.morphe.patcher.util.smali.ExternalLabel
 import app.morphe.patcher.patch.patch
 import app.sircoderin.patches.shared.Constants.COMPATIBILITY_SPOTIFY
@@ -29,20 +31,30 @@ private const val LIST = "Ljava/util/List;"
  * to the adapter once `savedCount - 5 <= readyRows.size()`. Rows become ready top-down as the visible range moves,
  * and only about 16 are ready right after Back, so a deep scroll deadlocks with a blank page.
  *
- * This hooks four places (all found from bytecode, nothing hardcoded to obfuscated names):
- * - after the `getInt`: if rows are missing, hide the list, return 0 so rows show immediately, scroll down to make
- *   the runtime ready more rows, and restore the saved vertical state once enough exist;
- * - at the start of the page-update handler: tell the extension about every update (size of the ready-rows list);
+ * This hooks these places (all found from bytecode, nothing hardcoded to obfuscated names):
+ * - after the `getInt`: hide the list, return 0 so rows show immediately, scroll down to make the runtime ready more
+ *   rows, and once the saved top section exists, scroll it back to its saved offset;
+ * - at the start of the page-update handler: tell the extension about every update (the ready-rows list), which also
+ *   lets it keep the on-screen section in place when an update reorders rows;
  * - in the Home loop starter: on a restored start (`kjc0.t(true)`), always use the cache-only load strategy
  *   (RESTORE_OR_REVALIDATE), so the network revalidation does not replace the restored list a few seconds later;
- * - in `serialize()`: record each carousel's horizontal offset (Spotify saves none) and re-apply it after Back.
+ * - in `serialize()`: note the top section and its offset when Home is left;
+ * - in the carousel constructor: Spotify keeps each carousel's scroll state in a map keyed by section id, but creates
+ *   that map per view, so it is lost when Home's view is rebuilt on Back. Use one process-wide map instead;
+ * - bridges: the extension's `HomeListBridge` placeholders are given real bodies. `childPosition` calls
+ *   `LayoutManager.getPosition(View)` (the static call inside `LinearLayoutManager.findFirstVisibleItemPosition`);
+ *   `scrollToPositionWithOffset` loads the RecyclerView's layout manager (the only RecyclerView field of that type),
+ *   and if it is a `LinearLayoutManager` calls its `scrollToPositionWithOffset`, found by its exact opcode shape;
+ * - `RecyclerView.onInterceptTouchEvent` (framework override): passes touches to the extension so a finger on the
+ *   list ends any position hold.
  */
 @Suppress("unused")
 val restoreHomeScrollPatch = patch(
     name = "Restore Home scroll position",
     description = "Fixes the Home feed staying blank when you go back to it after scrolling down and opening " +
         "an album, and restores the vertical and carousel scroll positions. On Back, Home is shown from cache " +
-        "instead of being reloaded a few seconds later; use \"Home pull to refresh\" to refresh it.",
+        "instead of being reloaded a few seconds later; use \"Home pull to refresh\" to refresh it. Also keeps " +
+        "the row you are looking at in place when Spotify swaps in fresh Home content while you scroll.",
     default = true,
 ) {
     compatibleWith(COMPATIBILITY_SPOTIFY)
@@ -53,6 +65,8 @@ val restoreHomeScrollPatch = patch(
         hookRestore()
         hookSerialize()
         hookLoadStrategy()
+        hookCarouselStates()
+        hookListBridges()
     }
 }
 
@@ -191,5 +205,89 @@ private fun hookLoadStrategy() {
             return-object v0
         """,
         ExternalLabel("original", strategyMethod.implementation!!.instructions.first()),
+    )
+}
+
+/** Replaces the carousel's per-view state map (`new LinkedHashMap()`) with the extension's process-wide map. */
+private fun hookCarouselStates() {
+    val method = HomeCarouselConstructorFingerprint.method
+    val instructions = method.implementation!!.instructions.toList()
+    val newIndex = HomeCarouselConstructorFingerprint.instructionMatches.first().index
+    val register = (instructions[newIndex] as OneRegisterInstruction).registerA
+    val initIndex = (newIndex + 1 until instructions.size).first { i ->
+        val ins = instructions[i]
+        val ref = (ins as? ReferenceInstruction)?.reference as? MethodReference
+        ins.opcode == Opcode.INVOKE_DIRECT && ref?.definingClass == "Ljava/util/LinkedHashMap;" &&
+            ref.name == "<init>" && ref.parameterTypes.isEmpty() &&
+            (ins as FiveRegisterInstruction).registerC == register
+    }
+    method.addInstructions(
+        initIndex + 1,
+        """
+            invoke-static { }, $EXT->carouselStates()Ljava/util/LinkedHashMap;
+            move-result-object v$register
+        """,
+    )
+}
+
+/** Replaces the whole body of [method] with [smali] (which must return on every path). */
+private fun replaceBody(method: MutableMethod, smali: String) {
+    method.removeInstructions(0, method.implementation!!.instructions.count())
+    method.addInstructionsWithLabels(0, smali)
+}
+
+private fun Fingerprint.single(what: String): MutableMethod {
+    val matches = matchAll()
+    check(matches.size == 1) { "$what: expected exactly one match, found ${matches.size}" }
+    return matches.single().method
+}
+
+private fun hookListBridges() {
+    // RecyclerView.onInterceptTouchEvent -> extension, first thing.
+    val touch = RecyclerViewInterceptTouchFingerprint.single("RecyclerView.onInterceptTouchEvent")
+    val recyclerView = RecyclerViewInterceptTouchFingerprint.classDef
+
+    // LayoutManager.getPosition(View): the static call in findFirstVisibleItemPosition.
+    val findFirst = FindFirstVisibleItemPositionFingerprint.single("LinearLayoutManager.findFirstVisibleItemPosition")
+    val getPosition = getPositionCall(findFirst) ?: error("getPosition(View) call not found")
+    val layoutManagerClass = getPosition.definingClass
+
+    // The RecyclerView field holding the layout manager.
+    val layoutFields = recyclerView.instanceFields.filter { it.type == layoutManagerClass }
+    check(layoutFields.size == 1) {
+        "Expected exactly one $layoutManagerClass field on RecyclerView, found ${layoutFields.map { it.name }}"
+    }
+    val layoutField = layoutFields.single()
+
+    val scroll = ScrollToPositionWithOffsetFingerprint.single("LinearLayoutManager.scrollToPositionWithOffset")
+
+    replaceBody(
+        ChildPositionBridgeFingerprint.single("HomeListBridge.childPosition"),
+        """
+            invoke-static { p0 }, ${getPosition.definingClass}->${getPosition.name}(Landroid/view/View;)I
+            move-result p0
+            return p0
+        """,
+    )
+    // Registers: p0 list, p1 position, p2 offset, p3 unused (the stub's scratch parameter).
+    replaceBody(
+        ScrollBridgeFingerprint.single("HomeListBridge.scrollToPositionWithOffset"),
+        """
+            check-cast p0, $RECYCLER_VIEW
+            iget-object p0, p0, ${recyclerView.type}->${layoutField.name}:${layoutField.type}
+            instance-of p3, p0, ${scroll.definingClass}
+            if-eqz p3, :not_linear
+            check-cast p0, ${scroll.definingClass}
+            invoke-virtual { p0, p1, p2 }, ${scroll.definingClass}->${scroll.name}(II)V
+            const/4 p3, 0x1
+            return p3
+            :not_linear
+            const/4 p3, 0x0
+            return p3
+        """,
+    )
+    touch.addInstructions(
+        0,
+        "invoke-static { p0, p1 }, $EXT->onListTouch(Landroid/view/View;Landroid/view/MotionEvent;)V",
     )
 }

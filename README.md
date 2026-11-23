@@ -30,7 +30,7 @@ A daily GitHub Action checks for new stable releases of the patched apps (Kvaesi
 
 Fixes the Home feed going blank after Back, and makes Back return to where you were:
 
-- **Restore Home scroll position**: after scrolling the Home feed down, opening an album and pressing Back, the feed no longer stays blank. You land at the same spot, with carousels scrolled where you left them. Home is shown from cache on Back instead of being reloaded a few seconds later, which used to throw you back to the top.
+- **Restore Home scroll position**: after scrolling the Home feed down, opening an album and pressing Back, the feed no longer stays blank. You land at the same spot, with carousels scrolled where you left them. Home is shown from cache on Back instead of being reloaded a few seconds later, which used to throw you back to the top. When Spotify swaps in fresh Home content right after the app starts, the row you're looking at stays put instead of jumping a few rows.
 - **Home pull to refresh**: turns on Spotify's built-in pull-to-refresh on the Home feed, which Spotify normally keeps off with a server flag. Pull down at the top of Home to load a fresh feed.
 
 Tested on Spotify 9.2.0.2053. Later versions are marked experimental in Morphe Manager.
@@ -48,7 +48,7 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.3.0](https://github.com/sircoderin/morphe-patches/releases/tag/v1.3.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
+> **[v1.3.1-dev.1](https://github.com/sircoderin/morphe-patches/releases/tag/v1.3.1-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
 <details open>
 <summary>📦 Kvaesitso&nbsp;&nbsp;•&nbsp;&nbsp;3 patches</summary>
 <br>
@@ -82,7 +82,7 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Home pull to refresh](#home-pull-to-refresh) | Enables Spotify's built-in pull-to-refresh on the Home feed, which is normally turned off by a server flag. |  |
-| [Restore Home scroll position](#restore-home-scroll-position) | Fixes the Home feed staying blank when you go back to it after scrolling down and opening an album, and restores the vertical and carousel scroll positions. On Back, Home is shown from cache instead of being reloaded a few seconds later; use "Home pull to refresh" to refresh it. |  |
+| [Restore Home scroll position](#restore-home-scroll-position) | Fixes the Home feed staying blank when you go back to it after scrolling down and opening an album, and restores the vertical and carousel scroll positions. On Back, Home is shown from cache instead of being reloaded a few seconds later; use "Home pull to refresh" to refresh it. Also keeps the row you are looking at in place when Spotify swaps in fresh Home content while you scroll. |  |
 
 </details>
 
