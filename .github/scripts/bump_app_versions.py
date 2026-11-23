@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Add newly released app versions to the patches' supported versions.
 
-For each tracked app, read its release source (an APKMirror feed or the
-project's GitHub releases). If the newest stable
+For each tracked app, read its release source (an APKMirror feed, an Uptodown
+app page, or the project's GitHub releases). If the newest stable
 version is newer than every version listed in that app's Compatibility block
 in Constants.kt, add it as a supported AppTarget. Morphe Manager then shows
 "App update available" for the patched app once the next release is published.
@@ -35,6 +35,15 @@ APPS = [
         "source": "github",
         "repo": "MM2-0/Kvaesitso",
     },
+    {
+        # APKMirror's Spotify pages answer scripts with a Cloudflare challenge (403), so read Uptodown instead.
+        # Download the APK itself from APKMirror as usual.
+        "name": "Spotify",
+        "scope": "spotify",
+        "constant": "COMPATIBILITY_SPOTIFY",
+        "source": "uptodown",
+        "page": "https://spotify.en.uptodown.com/android",
+    },
 ]
 
 VERSION_RE = re.compile(r"^\d+(?:\.\d+)+$")
@@ -64,9 +73,23 @@ def latest_github_version(app):
     return max(versions, key=vkey)
 
 
+def latest_uptodown_version(app):
+    req = urllib.request.Request(app["page"], headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        html = r.read().decode("utf-8", "replace")
+    # The app page shows the current version as <... class="version">9.2.4.2644</...>.
+    versions = [v.strip() for v in re.findall(r'class="version"[^>]*>([^<]*)<', html)]
+    versions = [v for v in versions if VERSION_RE.match(v)]
+    if not versions:
+        raise RuntimeError(f"{app['name']}: no version found on {app['page']}")
+    return max(versions, key=vkey)
+
+
 def latest_version(app):
     if app["source"] == "github":
         return latest_github_version(app)
+    if app["source"] == "uptodown":
+        return latest_uptodown_version(app)
     return latest_feed_version(app)
 
 
@@ -105,7 +128,7 @@ def main():
         if anchor is None:
             raise RuntimeError(f"{app['name']}: no `targets = listOf(` in {app['constant']}")
         indent = anchor.group(1)
-        line = (f"// Added automatically when released on APKMirror (not hand-tested).\n"
+        line = (f"// Added automatically when a new release appeared (not hand-tested).\n"
                 f'{indent}AppTarget(version = "{latest}"),\n{indent}')
         block = block[:anchor.end()] + line + block[anchor.end():]
         src = src[:start] + block + src[end:]
