@@ -13,6 +13,15 @@ Small UX fixes for apps I use, packaged as a Morphe patch bundle.
 
 Tested on Kvaesitso 1.41.0 (official GitHub release). Later versions are marked experimental in Morphe Manager.
 
+### Spotify
+
+Fixes the Home feed going blank after Back, and makes Back return to where you were:
+
+- **Restore Home scroll position**: after scrolling the Home feed down, opening an album and pressing Back, the feed no longer stays blank. You land at the same spot, with carousels scrolled where you left them. Home is shown from cache on Back instead of being reloaded a few seconds later, which used to throw you back to the top.
+- **Home pull to refresh**: turns on Spotify's built-in pull-to-refresh on the Home feed, which Spotify normally keeps off with a server flag. Pull down at the top of Home to load a fresh feed.
+
+Tested on Spotify 9.2.0.2053. Later versions are marked experimental in Morphe Manager.
+
 Unofficial and not affiliated with the patched apps or the Morphe project.
 
 ### How to use these patches
