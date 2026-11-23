@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/sircoderin/morphe-patches/compare/v1.1.0...v1.2.0) (2026-11-23)
+
+### ✨ New Features
+
+* **spotify:** add "Restore Home scroll position" and "Home pull to refresh" patches ([7a2ce14](https://github.com/sircoderin/morphe-patches/commit/7a2ce14ce4bfb3a5e1794719239bf69836c70fac))
+
 ## [1.2.0-dev.1](https://github.com/sircoderin/morphe-patches/compare/v1.1.0...v1.2.0-dev.1) (2026-11-23)
 
 ### ✨ New Features
