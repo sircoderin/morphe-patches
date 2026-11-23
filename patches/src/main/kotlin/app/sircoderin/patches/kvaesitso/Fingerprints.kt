@@ -44,3 +44,19 @@ internal object LauncherScaffoldStateResetFingerprint : Fingerprint(
     returnType = "Ljava/lang/Object;",
     parameters = listOf("Lkotlin/coroutines/Continuation;"),
 )
+
+/** `SharedLauncherActivity.onPause()`: `super.onPause()`, then clears `isNewIntent`. */
+internal object SharedLauncherActivityOnPauseFingerprint : Fingerprint(
+    definingClass = "Lde/mm20/launcher2/ui/launcher/SharedLauncherActivity;",
+    name = "onPause",
+    returnType = "V",
+    parameters = listOf(),
+)
+
+/** `BaseActivity.onResume()`: runs before ON_RESUME is dispatched, so before the scaffold's resume check. */
+internal object BaseActivityOnResumeFingerprint : Fingerprint(
+    definingClass = "Lde/mm20/launcher2/ui/base/BaseActivity;",
+    name = "onResume",
+    returnType = "V",
+    parameters = listOf(),
+)

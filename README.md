@@ -10,7 +10,7 @@ Small UX fixes for apps I use, packaged as a Morphe patch bundle.
 
 - **Instant search dismiss**: swipe-to-close finishes as soon as the swipe is released, instead of waiting for the swipe animation to fully settle. This removes the ~350 ms of frozen blur before the home screen comes back.
 - **Search fade-in**: the overlay fades and gently scales in when it opens, mirroring the close animation, instead of popping in.
-- **Keep keyboard on reopen**: when you launch an app from the search, use it for a while, go Home and open the search again, the search bar is focused with the keyboard up. Before, the old query flashed, got cleared, and the search stayed open with no cursor and no keyboard. Follows Kvaesitso's own "open keyboard" setting.
+- **Clean search on reopen**: swiping down for the search again (for example after launching an app from it and going Home) always starts a clean search with the keyboard open. Going back to the search with Back from an app you launched from it keeps what you typed. Before, what you got depended only on time: under 5 s the old query stayed, over 5 s it flashed and was cleared, and either way the keyboard stayed closed.
 
 Tested on Kvaesitso 1.41.0 (official GitHub release).
 
