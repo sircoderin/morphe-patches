@@ -1,3 +1,9 @@
+## [1.2.2](https://github.com/sircoderin/morphe-patches/compare/v1.2.1...v1.2.2) (2026-11-23)
+
+### 🐛 Bug Fixes
+
+* **spotify:** announce new Spotify versions only once Morphe Manager links them to APKMirror ([1858256](https://github.com/sircoderin/morphe-patches/commit/18582561d6178c205290153ea97a01920deef1e6))
+
 ## [1.2.1](https://github.com/sircoderin/morphe-patches/compare/v1.2.0...v1.2.1) (2026-11-23)
 
 ### 🚀 Updated App Support
