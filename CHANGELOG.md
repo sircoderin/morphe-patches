@@ -1,3 +1,9 @@
+## [1.3.0-dev.1](https://github.com/sircoderin/morphe-patches/compare/v1.2.2...v1.3.0-dev.1) (2026-11-23)
+
+### ✨ New Features
+
+* **kvaesitso:** add "Keep keyboard on reopen" patch ([f81d614](https://github.com/sircoderin/morphe-patches/commit/f81d6148e67b882c16c911b19e88864898bc3a48))
+
 ## [1.2.2](https://github.com/sircoderin/morphe-patches/compare/v1.2.1...v1.2.2) (2026-11-23)
 
 ### 🐛 Bug Fixes

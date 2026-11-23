@@ -48,7 +48,7 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.2.2](https://github.com/sircoderin/morphe-patches/releases/tag/v1.2.2)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;5 patches total
+> **[v1.3.0-dev.1](https://github.com/sircoderin/morphe-patches/releases/tag/v1.3.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;6 patches total
 <details open>
 <summary>📦 Spotify&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
@@ -68,7 +68,7 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 </details>
 
 <details open>
-<summary>📦 Kvaesitso&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
+<summary>📦 Kvaesitso&nbsp;&nbsp;•&nbsp;&nbsp;3 patches</summary>
 <br>
 
 **Package name:** `de.mm20.launcher2.release`
@@ -81,6 +81,7 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 | 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
 |----------|----------------|-----------|
 | [Instant search dismiss](#instant-search-dismiss) | Closes the search overlay as soon as the swipe-to-close is released, instead of after the swipe animation fully settles (removes the frozen blur when closing). |  |
+| [Keep keyboard on reopen](#keep-keyboard-on-reopen) | Keeps the search focused with the keyboard open when the search overlay is reopened after a while in another app, instead of showing it without the keyboard. |  |
 | [Search fade-in](#search-fade-in) | Fades and gently scales the search overlay in when it opens, mirroring the close animation. |  |
 
 </details>
