@@ -35,7 +35,25 @@ Click the button below, or manually add this repo url to Morphe Manager: https:/
 ## 🩹 Patches list
 
 <!-- PATCHES_START EXPANDED -->
-> **[v1.1.0](https://github.com/sircoderin/morphe-patches/releases/tag/v1.1.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;3 patches total
+> **[v1.2.0-dev.1](https://github.com/sircoderin/morphe-patches/releases/tag/v1.2.0-dev.1)**&nbsp;&nbsp;•&nbsp;&nbsp;`dev`&nbsp;&nbsp;•&nbsp;&nbsp;5 patches total
+<details open>
+<summary>📦 Spotify&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
+<br>
+
+**Package name:** `com.spotify.music`
+
+**🎯 Supported versions:**
+
+| 9.2.0.2053 |
+| :---: |
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Home pull to refresh](#home-pull-to-refresh) | Enables Spotify's built-in pull-to-refresh on the Home feed, which is normally turned off by a server flag. |  |
+| [Restore Home scroll position](#restore-home-scroll-position) | Fixes the Home feed staying blank when you go back to it after scrolling down and opening an album, and restores the vertical and carousel scroll positions. On Back, Home is shown from cache instead of being reloaded a few seconds later; use "Home pull to refresh" to refresh it. |  |
+
+</details>
+
 <details open>
 <summary>📦 Kvaesitso&nbsp;&nbsp;•&nbsp;&nbsp;2 patches</summary>
 <br>
